@@ -1524,7 +1524,7 @@ export default function App() {
   const [loginError, setLoginError] = useState('');
 
 
-  const API_URL = 'http://localhost:3001';
+  const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '/api';
 
   const showToast = (message, type = 'info') => {
     const id = Date.now();
@@ -1667,6 +1667,22 @@ export default function App() {
     }
   };
 
+  const handleAddPaciente = async (newPaciente) => {
+    try {
+      const response = await fetch(`${API_URL}/pacientes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPaciente)
+      });
+      const addedPaciente = await response.json();
+      setPacientes(prev => [addedPaciente, ...prev]);
+      showToast('Novo paciente adicionado!', 'success');
+    } catch (error) {
+      console.error("Falha ao adicionar paciente:", error);
+      showToast('Erro ao adicionar paciente.', 'error');
+    }
+  };
+
   // Funções para ATUALIZAR
   const handleUpdateAtendimento = (updatedAtendimento) => {
     setAtendimentos(prev => prev.map(at => at.id === updatedAtendimento.id ? updatedAtendimento : at));
@@ -1679,6 +1695,9 @@ export default function App() {
   };
   const handleUpdateRepasse = (updatedRepasse) => {
     setRepasses(prev => prev.map(r => r.id === updatedRepasse.id ? updatedRepasse : r));
+  };
+  const handleUpdatePaciente = (updatedPaciente) => {
+    setPacientes(prev => prev.map(p => p.id === updatedPaciente.id ? updatedPaciente : p));
   };
 
 
@@ -1738,6 +1757,17 @@ export default function App() {
     }
   };
 
+  const handleDeletePaciente = async (id) => {
+    try {
+      await fetch(`${API_URL}/pacientes/${id}`, { method: 'DELETE' });
+      setPacientes(prev => prev.filter(p => p.id !== id));
+      showToast('Paciente apagado!', 'success');
+    } catch (error) {
+      console.error("Falha ao apagar paciente:", error);
+      showToast('Erro ao apagar paciente.', 'error');
+    }
+  };
+
 
   const pageTitles = {
     dashboard: "Dashboard",
@@ -1755,7 +1785,7 @@ export default function App() {
       case 'atendimentos':
         return <Atendimentos servicos={servicos} atendimentos={atendimentos} onUpdateAtendimento={handleUpdateAtendimento} financeiro={financeiro} onAddAtendimento={handleAddAtendimento} onDeleteAtendimento={handleDeleteAtendimento} onAddTransaction={handleAddTransaction} showToast={showToast} pacientes={pacientes} />;
       case 'pacientes':
-        return <Pacientes pacientes={pacientes} showToast={showToast} />;
+        return <Pacientes pacientes={pacientes} onAddPaciente={handleAddPaciente} onDeletePaciente={handleDeletePaciente} onUpdatePaciente={handleUpdatePaciente} showToast={showToast} />;
       case 'financeiro':
         return <Financeiro financeiro={financeiro} onUpdateTransaction={handleUpdateTransaction} servicos={servicos} onAddTransaction={handleAddTransaction} onDeleteTransaction={handleDeleteTransaction} showToast={showToast} pacientes={pacientes} />;
       case 'estoque':
