@@ -1,0 +1,183 @@
+{
+  "atendimentos": [
+    {
+      "id": 1,
+      "data": "2025-10-22",
+      "paciente": "Ana Celia Costa",
+      "profissional": "Enf.ª Andreia",
+      "tipo": "Consulta de Enfermagem + Prevenção",
+      "valor": "170.00",
+      "setor": "Enfermagem",
+      "status": "Agendado"
+    },
+    {
+      "id": 2,
+      "data": "2025-10-21",
+      "paciente": "Laura Mendes",
+      "profissional": "Tec. Bruno",
+      "tipo": "Exame Laboratorial",
+      "valor": "55.02",
+      "setor": "Exames",
+      "status": "Confirmado"
+    },
+    {
+      "id": 3,
+      "data": "2025-10-20",
+      "paciente": "João Costa",
+      "profissional": "Enf.ª Ana",
+      "tipo": "Exame de Sangue",
+      "valor": "120.50",
+      "setor": "Exames",
+      "status": "Confirmado"
+    },
+    {
+      "id": 4,
+      "data": "2025-10-19",
+      "paciente": "Ana Silva",
+      "profissional": "Dr Ciarline",
+      "tipo": "Consulta Pediátrica",
+      "valor": "250.00",
+      "setor": "Consultas",
+      "status": "Confirmado"
+    }
+  ],
+  "financeiro": [
+    {
+      "id": 1,
+      "data": "2025-10-22",
+      "descricao": "Consulta de Enfermagem + Prevenção",
+      "pagador": "Ana Celia Costa",
+      "categoria": "Atendimento Clínico",
+      "tipo": "Entrada",
+      "valor": 170,
+      "status": "A Receber"
+    },
+    {
+      "id": 2,
+      "data": "2025-10-21",
+      "descricao": "Exame Laboratorial",
+      "pagador": "Laura Mendes",
+      "categoria": "Atendimento Clínico",
+      "tipo": "Entrada",
+      "valor": 55.02,
+      "status": "A Receber"
+    },
+    {
+      "id": 3,
+      "data": "2025-10-20",
+      "descricao": "Exame de Sangue",
+      "pagador": "João Costa",
+      "categoria": "Exames",
+      "tipo": "Entrada",
+      "valor": 120.5,
+      "status": "A Receber"
+    },
+    {
+      "id": 4,
+      "data": "2025-10-19",
+      "descricao": "Consulta Pediátrica",
+      "pagador": "Ana Silva",
+      "categoria": "Consultas",
+      "tipo": "Entrada",
+      "valor": 250,
+      "status": "Recebido"
+    },
+    {
+      "id": 5,
+      "data": "2025-10-19",
+      "descricao": "Pagamento Aluguel",
+      "pagador": "Clínica AMELDY",
+      "categoria": "Despesas Fixas",
+      "tipo": "Saída",
+      "valor": 1700,
+      "status": "Pago"
+    },
+    {
+      "id": "d8ae",
+      "data": "2025-10-22",
+      "descricao": "Consulta de Enfermagem + Prevenção",
+      "pagador": "Ana Celia Costa",
+      "categoria": "Atendimento Clínico",
+      "tipo": "Entrada",
+      "valor": 170,
+      "status": "A Receber",
+      "atendimentoId": 1
+    }
+  ],
+  "estoque": [
+    {
+      "id": 1,
+      "item": "Seringa 5ml",
+      "categoria": "Descartáveis",
+      "consumoMedio": 150,
+      "atual": 50
+    },
+    {
+      "id": 2,
+      "item": "Luva Procedimento (M)",
+      "categoria": "EPI",
+      "consumoMedio": 300,
+      "atual": 150
+    },
+    {
+      "id": 3,
+      "item": "Gaze",
+      "categoria": "Curativos",
+      "consumoMedio": 500,
+      "atual": 100
+    },
+    {
+      "id": "4a28",
+      "item": "luva",
+      "categoria": "laboratorio",
+      "consumoMedio": 300,
+      "atual": 30
+    }
+  ],
+  "servicos": [
+    {
+      "id": 1,
+      "nome": "Consulta de Enfermagem"
+    },
+    {
+      "id": 2,
+      "nome": "Exame Laboratorial"
+    },
+    {
+      "id": 3,
+      "nome": "Consulta Pediátrica"
+    },
+    {
+      "id": 4,
+      "nome": "Exame de Sangue"
+    }
+  ],
+  "repasses": [
+    {
+      "id": 1,
+      "servico": "Consulta Pediátrica",
+      "tipo": "Percentual",
+      "valor": "40%"
+    }
+  ],
+  "pacientes": [
+    {
+      "id": 1,
+      "nome": "Ana Celia Costa",
+      "telefone": "11 98765-4321",
+      "dataNascimento": "1985-05-15"
+    },
+    {
+      "id": 2,
+      "nome": "Laura Mendes",
+      "telefone": "21 91234-5678",
+      "dataNascimento": "1992-11-30"
+    },
+    {
+      "id": 3,
+      "nome": "João Costa",
+      "telefone": "31 99999-8888",
+      "dataNascimento": "2001-01-20"
+    }
+  ]
+}
