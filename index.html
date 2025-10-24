@@ -1,13 +1,55 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ameldy-frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- Ícone da sua logo -->
+  <link rel="icon" type="image/png" href="/public/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ameldy - Gestão de Clínica</title>
+
+  <!-- Bibliotecas PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Correção para o autoTable -->
+  <script>
+    if (window.jspdf) {
+      window.jsPDF = window.jspdf.jsPDF;
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- 
+      AJUSTE DE ESTILO (v2): 
+      Força o HTML, o Body e o Root (seu app) a ocuparem 100% da altura.
+      Isso corrige overlays de modais que não cobrem a tela inteira.
+    -->
+  <style>
+    html,
+    body {
+      /* Garante que o html e o body ocupem 100% da altura */
+      height: 100%;
+      /* Remove margens e espaçamentos padrão */
+      margin: 0;
+      padding: 0;
+    }
+
+    #root {
+      /* Faz o #root (seu app React) ocupar 100% da altura do body */
+      height: 100%;
+
+      /* Usa flexbox para que os componentes *dentro* do app 
+          (como seu layout principal) possam se expandir corretamente.
+        */
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
