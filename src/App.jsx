@@ -73,6 +73,7 @@ const LoadingSpinner = () => (
 
 const EmptyState = ({ icon, title, message, actionButton }) => (
       // Fundo ligeiramente mais claro, sombra mais suave
+      // Mantido bg-white aqui, pois é um estado vazio dentro do container principal
       <div className="text-center py-12 px-6 bg-white rounded-2xl shadow-sm border border-gray-100">
             <div className="mx-auto h-16 w-16 flex items-center justify-center bg-pink-50 rounded-full text-pink-400 mb-4">{icon}</div>
             <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
@@ -389,15 +390,27 @@ const Sidebar = ({ currentPage, setCurrentPage, isOpen, setIsOpen, onLogout }) =
 
 // ** MOVIDO Header PARA ANTES do App **
 const Header = ({ onMenuClick, title }) => (
-      // Oculta a logo (`hidden`) por defeito e mostra em lg (`lg:block`)
+      // Exibe apenas em telas menores que lg (`lg:hidden`)
+      // Usa flex para alinhar itens e justificar espaço entre eles
       <header className="lg:hidden bg-white sticky top-0 z-10 flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 border-b border-gray-100 shadow-sm">
+            {/* Botão de Menu à esquerda */}
             <button onClick={onMenuClick} className={`${iconButtonStyles} text-gray-600 focus:ring-gray-400`} aria-label="Abrir menu lateral"><Menu className="h-6 w-6" /></button>
-            {/* Adiciona a logo de volta, mas só para mobile */}
-            <img src="/public/logo(2).png" alt="AMELDY (logo rosa)" className="h-8 lg:hidden" />
-            <div className="w-8"></div> {/* Spacer para manter o título/logo centralizado */}
+
+            {/* Título da Página Centralizado */}
+            {/* flex-grow permite que o span ocupe o espaço disponível */}
+            {/* text-center centraliza o texto dentro do span */}
+            <span className="flex-grow text-center text-lg font-semibold text-gray-700 truncate px-2">
+                  {title}
+            </span>
+
+            {/* Espaçador invisível à direita para equilibrar com o botão de menu */}
+            {/* Garante que o título fique centralizado horizontalmente */}
+            {/* Ajuste o `w-` (width) para corresponder aproximadamente à largura do botão de menu + padding */}
+            <div className="w-10"></div>
       </header>
 );
 
+// ** MOVIDO AtendimentosChart PARA ANTES do App **
 // ** MOVIDO AtendimentosChart PARA ANTES do App **
 const AtendimentosChart = ({ atendimentos }) => {
       const chartRef = useRef(null);
@@ -606,7 +619,7 @@ const AtendimentoList = ({ items, handleUpdateStatus, handleDeleteClick, openAge
       return (
             <div className="space-y-3"> {/* Espaçamento menor */}
                   {items.map(at => (
-                        <div key={at.id} className="p-4 border border-gray-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between hover:bg-gray-50/80 transition-colors duration-150"> {/* Padding menor, hover mais sutil */}
+                        <div key={at.id} className="p-4 bg-white border border-gray-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between hover:bg-gray-50/80 transition-colors duration-150"> {/* MANTIDO BG-WHITE AQUI */}
                               <div className="flex-1 mb-3 sm:mb-0">
                                     <p className="font-semibold text-gray-800 text-base">{at.paciente}</p> {/* Fonte ligeiramente menor, semibold */}
                                     <p className="text-sm text-gray-600">{at.tipo} - {at.profissional}</p>
@@ -697,7 +710,7 @@ const Atendimentos = ({ servicos = [], atendimentos = [], onUpdateAtendimento, o
                               ))}
                         </nav>
                   </div>
-                  {/* Conteúdo */}
+                  {/* Conteúdo - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 min-h-[300px]"> {/* Sombra e borda suaves */}
                         {activeTab === 'proximos'
                               ? <AtendimentoList items={proximosAtendimentos} handleUpdateStatus={handleUpdateStatus} handleDeleteClick={handleDeleteClick} openAgendamentoModal={openAgendamentoModal} />
@@ -802,11 +815,11 @@ const Pacientes = ({ pacientes = [], onAddPaciente, onUpdatePaciente, onDeletePa
                               <button onClick={openNovoPacienteModal} className={`${primaryButtonStyles} px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm`}>Novo Paciente</button>
                         </div>
                   </div>
-                  {/* Container da Lista/Tabela */}
+                  {/* Container da Lista/Tabela - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[300px]">
                         {(pacientes || []).length > 0 ? (
                               <table className="w-full text-sm text-left">
-                                    <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                                    <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100"> {/* Fundo thead cinza claro */}
                                           <tr>
                                                 <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Nome</th>
                                                 <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold hidden sm:table-cell">Telefone</th>
@@ -815,13 +828,13 @@ const Pacientes = ({ pacientes = [], onAddPaciente, onUpdatePaciente, onDeletePa
                                           </tr>
                                     </thead>
                                     <tbody className="text-gray-700 divide-y divide-gray-100">
-                                          {(pacientes || []).map((p) => (<tr key={p.id} className="hover:bg-gray-50 transition-colors duration-150">
+                                          {(pacientes || []).map((p) => (<tr key={p.id} className="hover:bg-gray-50 transition-colors duration-150"> {/* Hover cinza claro */}
                                                 <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800 whitespace-nowrap">{p.nome}</td>
                                                 <td className="px-2 py-2 sm:px-6 sm:py-4 hidden sm:table-cell whitespace-nowrap text-gray-600">{p.telefone || '-'}</td>
                                                 <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell whitespace-nowrap text-gray-600">{p.dataNascimento ? new Date(p.dataNascimento).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : '-'}</td>
                                                 <td className="px-2 py-2 sm:px-6 sm:py-4 text-right whitespace-nowrap">
-                                                      <button onClick={() => handleEdit(p)} className={`${iconButtonStyles} text-blue-500 hover:text-blue-700 hover:bg-blue-50 focus:ring-blue-300`} aria-label="Editar paciente"><FilePenLine className="inline h-5 w-5" /></button>
-                                                      <button onClick={() => handleDeleteClick(p)} className={`${iconButtonStyles} text-red-500 hover:text-red-700 hover:bg-red-50 ml-2 sm:ml-4 focus:ring-red-300`} aria-label="Apagar paciente"><Trash2 className="inline h-5 w-5" /></button>
+                                                      <button onClick={() => handleEdit(p)} className={`${iconButtonStyles} text-blue-500 hover:text-blue-700 hover:bg-blue-50 focus:ring-blue-300`} aria-label="Editar paciente"><FilePenLine className="inline h-5 w-5" /></button> {/* Hover com cor */}
+                                                      <button onClick={() => handleDeleteClick(p)} className={`${iconButtonStyles} text-red-500 hover:text-red-700 hover:bg-red-50 ml-2 sm:ml-4 focus:ring-red-300`} aria-label="Apagar paciente"><Trash2 className="inline h-5 w-5" /></button> {/* Hover com cor */}
                                                 </td>
                                           </tr>))}
                                     </tbody>
@@ -944,6 +957,7 @@ const Financeiro = ({ financeiro = [], onUpdateTransaction, onDeleteTransaction,
                               <button onClick={openNovaTransacaoModal} className={`${primaryButtonStyles} px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm`}>Nova Transação</button>
                         </div>
                   </div>
+                  {/* Filtros - Alterado bg-gray-50 para bg-white */}
                   <div className={`bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 ${showFilters ? 'block' : 'hidden'} sm:block transition-all duration-300 ease-in-out`}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                               <div className="md:col-span-2"> <FormInput id="search-fin" label="Pesquisar" placeholder="Descrição, categoria, cliente..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} /> </div>
@@ -952,17 +966,21 @@ const Financeiro = ({ financeiro = [], onUpdateTransaction, onDeleteTransaction,
                               <div className="md:col-span-2 flex justify-end"> <button onClick={clearFilters} className={`${secondaryButtonStyles} mt-2 md:mt-0 w-full md:w-auto text-sm py-2`}>Limpar Filtros</button> </div>
                         </div>
                   </div>
+                  {/* Conteúdo Principal - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[300px]">
                         {filteredFinanceiro.length > 0 ? (
                               <>
                                     <div className="sm:hidden divide-y divide-gray-100">
+                                          {/* Mobile Card Items */}
                                           {filteredFinanceiro.map((tr) => {
                                                 const isClickable = tr.status === 'A Receber' || tr.status === 'A Pagar';
-                                                return (<div key={tr.id} className="p-4 space-y-1.5 hover:bg-gray-50 transition-colors duration-150"> <div className="flex justify-between items-start gap-2"> <span className="font-semibold text-gray-800 text-sm flex-grow truncate mr-2">{tr.descricao}</span> <span className={`flex-shrink-0 px-2.5 py-1 text-xs font-medium rounded-full ${financialStatusMap[tr.status] || 'bg-gray-200 text-gray-800'} ${isClickable ? 'cursor-pointer' : ''}`} onClick={() => isClickable && handleUpdateStatus(tr.id)}>{tr.status}</span> </div> <div className="flex justify-between items-center text-sm"> <span className={`font-bold text-base ${tr.tipo === 'Entrada' ? 'text-green-600' : 'text-red-600'}`}>{(Number(tr.valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span> <span className="text-gray-500 text-xs">{new Date(tr.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</span> </div> <div className="text-xs text-gray-500 flex flex-wrap gap-x-4 pt-1"> {tr.pagador && <span>Origem: <span className="text-gray-600">{tr.pagador}</span></span>} {tr.categoria && <span>Cat: <span className="text-gray-600">{tr.categoria}</span></span>} </div> <div className="flex justify-end pt-1"> <button onClick={() => handleDeleteClick(tr)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 focus:ring-red-300`} aria-label="Apagar transação"><Trash2 className="h-4 w-4" /></button> </div> </div>);
+                                                // Alterado hover:bg-gray-100 para hover:bg-gray-50
+                                                return (<div key={tr.id} className="p-4 space-y-1.5 hover:bg-gray-50 transition-colors duration-150"> <div className="flex justify-between items-start gap-2"> <span className="font-semibold text-gray-800 text-sm flex-grow truncate mr-2">{tr.descricao}</span> <span className={`flex-shrink-0 px-2.5 py-1 text-xs font-medium rounded-full ${financialStatusMap[tr.status] || 'bg-gray-200 text-gray-800'} ${isClickable ? 'cursor-pointer' : ''}`} onClick={() => isClickable && handleUpdateStatus(tr.id)}>{tr.status}</span> </div> <div className="flex justify-between items-center text-sm"> <span className={`font-bold text-base ${tr.tipo === 'Entrada' ? 'text-green-600' : 'text-red-600'}`}>{(Number(tr.valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span> <span className="text-gray-500 text-xs">{new Date(tr.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</span> </div> <div className="text-xs text-gray-500 flex flex-wrap gap-x-4 pt-1"> {tr.pagador && <span>Origem: <span className="text-gray-600">{tr.pagador}</span></span>} {tr.categoria && <span>Cat: <span className="text-gray-600">{tr.categoria}</span></span>} </div> <div className="flex justify-end pt-1"> <button onClick={() => handleDeleteClick(tr)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar transação"><Trash2 className="h-4 w-4" /></button> </div> </div>);
                                           })}
                                     </div>
                                     <div className="overflow-x-auto hidden sm:block">
                                           <table className="w-full text-sm text-left">
+                                                {/* Alterado bg-gray-100 para bg-gray-50 no thead */}
                                                 <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
                                                       <tr>
                                                             <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Data</th>
@@ -978,7 +996,8 @@ const Financeiro = ({ financeiro = [], onUpdateTransaction, onDeleteTransaction,
                                                 <tbody className="text-gray-700 text-xs sm:text-sm divide-y divide-gray-100">
                                                       {filteredFinanceiro.map((tr) => {
                                                             const isClickable = tr.status === 'A Receber' || tr.status === 'A Pagar';
-                                                            return (<tr key={tr.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap">{new Date(tr.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{tr.descricao}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-600">{tr.pagador}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-600">{tr.categoria}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden sm:table-cell"><span className={`px-2 py-0.5 sm:px-3 sm:py-1 text-xs font-bold rounded-full ${tr.tipo === 'Entrada' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{tr.tipo}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-bold whitespace-nowrap">{(Number(tr.valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap"><span onClick={() => isClickable && handleUpdateStatus(tr.id)} className={`px-2 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold rounded-full ${financialStatusMap[tr.status] || 'bg-gray-200 text-gray-800'} ${isClickable ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}>{tr.status}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right"><button onClick={() => handleDeleteClick(tr)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 focus:ring-red-300`} aria-label="Apagar transação"><Trash2 className="h-5 w-5" /></button></td> </tr>);
+                                                            // Alterado hover:bg-gray-100 para hover:bg-gray-50
+                                                            return (<tr key={tr.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap">{new Date(tr.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{tr.descricao}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-600">{tr.pagador}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-600">{tr.categoria}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden sm:table-cell"><span className={`px-2 py-0.5 sm:px-3 sm:py-1 text-xs font-bold rounded-full ${tr.tipo === 'Entrada' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{tr.tipo}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-bold whitespace-nowrap">{(Number(tr.valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 whitespace-nowrap"><span onClick={() => isClickable && handleUpdateStatus(tr.id)} className={`px-2 py-0.5 sm:px-3 sm:py-1 text-xs font-semibold rounded-full ${financialStatusMap[tr.status] || 'bg-gray-200 text-gray-800'} ${isClickable ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}>{tr.status}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right"><button onClick={() => handleDeleteClick(tr)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar transação"><Trash2 className="h-5 w-5" /></button></td> </tr>);
                                                       })}
                                                 </tbody>
                                           </table>
@@ -1066,6 +1085,7 @@ const Estoque = ({ estoque = [], onUpdateItem, onAddItem, onDeleteItem, showToas
                               <button onClick={openNovoItemModal} className={`${primaryButtonStyles} px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm`}>Novo Item</button>
                         </div>
                   </div>
+                  {/* Conteúdo Principal - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[300px]">
                         {filteredEstoque.length > 0 ? (
                               <>
@@ -1073,17 +1093,20 @@ const Estoque = ({ estoque = [], onUpdateItem, onAddItem, onDeleteItem, showToas
                                     <div className="sm:hidden grid grid-cols-1 gap-3 p-4">
                                           {filteredEstoque.map((item) => {
                                                 const consumo = Number(item.consumoMedio) || 0; const atual = Number(item.atual) || 0; const minimo = Math.ceil(consumo * 0.3); const status = consumo > 0 && atual <= minimo ? 'COMPRAR' : 'OK'; const isEditingAtual = editingItem?.item.id === item.id && editingItem?.field === 'atual'; const isEditingConsumo = editingItem?.item.id === item.id && editingItem?.field === 'consumoMedio';
-                                                return (<div key={item.id} className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm space-y-2 hover:bg-gray-50/80 transition-colors duration-150"> <div className="flex justify-between items-start gap-2"> <span className="font-semibold text-gray-800 text-sm flex items-center"><Box size={14} className="mr-1.5 text-gray-400" />{item.item}</span> <span className={`flex-shrink-0 px-2.5 py-0.5 text-xs font-semibold rounded-full ${status === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{status}</span> </div> <div className="text-xs text-gray-500 pl-5">Categoria: <span className="text-gray-600">{item.categoria}</span></div> <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-100 mt-2"> <div onClick={() => !isEditingConsumo && handleEdit(item, 'consumoMedio')} className="cursor-pointer p-1 -m-1 rounded hover:bg-gray-100"> <span className="text-xs text-gray-500">Cons. Médio: </span> {isEditingConsumo ? (<input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-16 p-1 border rounded focus:ring-pink-400 text-sm" autoFocus min="0" />) : (<span className="font-medium text-gray-700">{consumo}</span>)} </div> <div onClick={() => !isEditingAtual && handleEdit(item, 'atual')} className="cursor-pointer p-1 -m-1 rounded hover:bg-gray-100"> <span className="text-xs text-gray-500">Atual: </span> {isEditingAtual ? (<input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-16 p-1 border rounded focus:ring-pink-400 text-sm" autoFocus min="0" />) : (<span className={`font-bold ${status === 'COMPRAR' ? 'text-red-600' : 'text-gray-800'}`}>{atual}</span>)} </div> </div> <div className="flex justify-end pt-1"> <button onClick={() => handleDeleteClick(item)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar item"><Trash2 className="h-4 w-4" /></button> </div> </div>);
+                                                // Alterado hover:bg-gray-100 para hover:bg-gray-50
+                                                return (<div key={item.id} className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm space-y-2 hover:bg-gray-50 transition-colors duration-150"> <div className="flex justify-between items-start gap-2"> <span className="font-semibold text-gray-800 text-sm flex items-center"><Box size={14} className="mr-1.5 text-gray-400" />{item.item}</span> <span className={`flex-shrink-0 px-2.5 py-0.5 text-xs font-semibold rounded-full ${status === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{status}</span> </div> <div className="text-xs text-gray-500 pl-5">Categoria: <span className="text-gray-600">{item.categoria}</span></div> <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-100 mt-2"> <div onClick={() => !isEditingConsumo && handleEdit(item, 'consumoMedio')} className="cursor-pointer p-1 -m-1 rounded hover:bg-gray-100"> <span className="text-xs text-gray-500">Cons. Médio: </span> {isEditingConsumo ? (<input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-16 p-1 border rounded focus:ring-pink-400 text-sm" autoFocus min="0" />) : (<span className="font-medium text-gray-700">{consumo}</span>)} </div> <div onClick={() => !isEditingAtual && handleEdit(item, 'atual')} className="cursor-pointer p-1 -m-1 rounded hover:bg-gray-100"> <span className="text-xs text-gray-500">Atual: </span> {isEditingAtual ? (<input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-16 p-1 border rounded focus:ring-pink-400 text-sm" autoFocus min="0" />) : (<span className={`font-bold ${status === 'COMPRAR' ? 'text-red-600' : 'text-gray-800'}`}>{atual}</span>)} </div> </div> <div className="flex justify-end pt-1"> <button onClick={() => handleDeleteClick(item)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar item"><Trash2 className="h-4 w-4" /></button> </div> </div>);
                                           })}
                                     </div>
                                     {/* Layout de Tabela para Desktop */}
                                     <div className="overflow-x-auto hidden sm:block">
                                           <table className="w-full text-sm text-left">
+                                                {/* Alterado bg-gray-100 para bg-gray-50 no thead */}
                                                 <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100"> <tr> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Item</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Categoria</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold hidden sm:table-cell">Consumo Médio</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Estoque Atual</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold hidden md:table-cell">Mínimo (30%)</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Status</th> <th scope="col" className="px-2 py-2 sm:px-6 sm:py-3 font-semibold text-right">Ações</th> </tr> </thead>
                                                 <tbody className="text-gray-700 divide-y divide-gray-100">
                                                       {filteredEstoque.map((item) => {
                                                             const consumo = Number(item.consumoMedio) || 0; const atual = Number(item.atual) || 0; const minimo = Math.ceil(consumo * 0.3); const status = consumo > 0 && atual <= minimo ? 'COMPRAR' : 'OK'; const isEditingAtual = editingItem?.item.id === item.id && editingItem?.field === 'atual'; const isEditingConsumo = editingItem?.item.id === item.id && editingItem?.field === 'consumoMedio';
-                                                            return (<tr key={item.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{item.item}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-gray-600">{item.categoria}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium hidden sm:table-cell" onClick={() => !isEditingConsumo && handleEdit(item, 'consumoMedio')}>{isEditingConsumo ? <input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-20 p-1 border rounded focus:ring-pink-400" autoFocus min="0" /> : <span className="cursor-pointer hover:bg-gray-100 p-1 rounded-md">{consumo}</span>}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium" onClick={() => !isEditingAtual && handleEdit(item, 'atual')}>{isEditingAtual ? <input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-20 p-1 border rounded focus:ring-pink-400" autoFocus min="0" /> : <span className="cursor-pointer hover:bg-gray-100 p-1 rounded-md">{atual}</span>}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-500">{minimo > 0 ? minimo : '-'}</td> <td className="px-2 py-2 sm:px-6 sm:py-4"><span className={`px-3 py-1 text-xs font-semibold rounded-full ${status === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{status}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right"><button onClick={() => handleDeleteClick(item)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 focus:ring-red-300`} aria-label="Apagar item"><Trash2 className="h-5 w-5" /></button></td> </tr>);
+                                                            // Alterado hover:bg-gray-100 para hover:bg-gray-50
+                                                            return (<tr key={item.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{item.item}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-gray-600">{item.categoria}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium hidden sm:table-cell" onClick={() => !isEditingConsumo && handleEdit(item, 'consumoMedio')}>{isEditingConsumo ? <input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-20 p-1 border rounded focus:ring-pink-400" autoFocus min="0" /> : <span className="cursor-pointer hover:bg-gray-100 p-1 rounded-md">{consumo}</span>}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium" onClick={() => !isEditingAtual && handleEdit(item, 'atual')}>{isEditingAtual ? <input type="number" value={editValue} onChange={handleInlineChange} onBlur={handleSaveInline} onKeyDown={handleInlineKeyDown} className="w-20 p-1 border rounded focus:ring-pink-400" autoFocus min="0" /> : <span className="cursor-pointer hover:bg-gray-100 p-1 rounded-md">{atual}</span>}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 hidden md:table-cell text-gray-500">{minimo > 0 ? minimo : '-'}</td> <td className="px-2 py-2 sm:px-6 sm:py-4"><span className={`px-3 py-1 text-xs font-semibold rounded-full ${status === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{status}</span></td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right"><button onClick={() => handleDeleteClick(item)} className={`${iconButtonStyles} text-gray-400 hover:text-red-500 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar item"><Trash2 className="h-5 w-5" /></button></td> </tr>);
                                                       })}
                                                 </tbody>
                                           </table>
@@ -1149,6 +1172,7 @@ const Configuracoes = ({ servicos = [], onUpdateServico, repasses = [], onUpdate
             <div className="space-y-6 sm:space-y-8">
                   {/* Título da seção (oculto em mobile, visível em lg) */}
                   <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center sm:text-left hidden lg:block">Configurações</h1>
+                  {/* Container Gestão de Serviços - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
                         <h3 className="text-xl font-semibold text-gray-700 mb-5">Gestão de Serviços</h3>
                         <form onSubmit={handleAddServicoWrapper} className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
@@ -1158,6 +1182,7 @@ const Configuracoes = ({ servicos = [], onUpdateServico, repasses = [], onUpdate
                         <div className="overflow-x-auto min-h-[150px]">
                               {(servicos || []).length > 0 ? (
                                     <table className="w-full text-sm text-left">
+                                          {/* Alterado bg-gray-100 para bg-gray-50 no thead */}
                                           <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
                                                 <tr>
                                                       <th className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Serviço</th>
@@ -1165,12 +1190,14 @@ const Configuracoes = ({ servicos = [], onUpdateServico, repasses = [], onUpdate
                                                 </tr>
                                           </thead>
                                           <tbody className="text-gray-700 divide-y divide-gray-100">
+                                                {/* Alterado hover:bg-gray-100 para hover:bg-gray-50 */}
                                                 {(servicos || []).map((s) => (<tr key={s.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{s.nome}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right"> <button onClick={() => onDeleteServico(s.id)} className={`${iconButtonStyles} text-red-500 hover:text-red-700 hover:bg-red-50 focus:ring-red-300`} aria-label="Apagar serviço"><Trash2 className="inline h-5 w-5" /></button> </td> </tr>))}
                                           </tbody>
                                     </table>
                               ) : (<EmptyState icon={<FilePlus size={32} />} title="Nenhum serviço registado" message="Adicione serviços para selecioná-los nos agendamentos." />)}
                         </div>
                   </div>
+                  {/* Container Regras de Repasse - Alterado bg-gray-50 para bg-white */}
                   <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
                         <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-5 gap-4">
                               <h3 className="text-xl font-semibold text-gray-700">Regras de Repasse (Comissão Clínica)</h3>
@@ -1179,6 +1206,7 @@ const Configuracoes = ({ servicos = [], onUpdateServico, repasses = [], onUpdate
                         <div className="overflow-x-auto min-h-[150px]">
                               {(repasses || []).length > 0 ? (
                                     <table className="w-full text-sm text-left">
+                                          {/* Alterado bg-gray-100 para bg-gray-50 no thead */}
                                           <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
                                                 <tr>
                                                       <th className="px-2 py-2 sm:px-6 sm:py-3 font-semibold">Serviço</th>
@@ -1188,6 +1216,7 @@ const Configuracoes = ({ servicos = [], onUpdateServico, repasses = [], onUpdate
                                                 </tr>
                                           </thead>
                                           <tbody className="text-gray-700 divide-y divide-gray-100">
+                                                {/* Alterado hover:bg-gray-100 para hover:bg-gray-50 */}
                                                 {(repasses || []).map((r, index) => (<tr key={r.id} className="hover:bg-gray-50 transition-colors duration-150"> <td className="px-2 py-2 sm:px-6 sm:py-4 font-medium text-gray-800">{r.servico}</td> {editingIndex === index ? (<> <td className="px-2 py-2 sm:px-6 sm:py-4"><select name="tipo" value={editData.tipo} onChange={handleEditRepasseChange} className="w-full p-1.5 border border-gray-300 rounded focus:ring-pink-400 focus:border-pink-400"><option value="Percentual">Percentual</option><option value="Fixo">Fixo</option></select></td> <td className="px-2 py-2 sm:px-6 sm:py-4"><input name="valor" type="text" value={editData.valor} onChange={handleEditRepasseChange} placeholder={editData.tipo === 'Percentual' ? 'Ex: 40%' : 'Ex: R$ 50,00'} className="w-full p-1.5 border border-gray-300 rounded focus:ring-pink-400 focus:border-pink-400" /></td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right whitespace-nowrap"> <button onClick={() => handleSaveRepasse(index)} className={`${iconButtonStyles} text-green-600 hover:text-green-700 hover:bg-green-50 focus:ring-green-300`} aria-label="Salvar"><Check size={20} /></button> <button onClick={handleCancelEditRepasse} className={`${iconButtonStyles} text-gray-500 hover:text-gray-700 hover:bg-gray-100 ml-1 sm:ml-2 focus:ring-gray-300`} aria-label="Cancelar"><X size={20} /></button> </td> </>) : (<> <td className="px-2 py-2 sm:px-6 sm:py-4 text-gray-600">{r.tipo}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 font-bold">{r.valor}</td> <td className="px-2 py-2 sm:px-6 sm:py-4 text-right whitespace-nowrap"> <button onClick={() => handleEditRepasse(index)} className={`${iconButtonStyles} text-blue-500 hover:text-blue-700 hover:bg-blue-50 focus:ring-blue-300`} aria-label="Editar regra"><FilePenLine className="inline h-5 w-5" /></button> <button onClick={() => handleDeleteRepasseClick(r)} className={`${iconButtonStyles} text-red-500 hover:text-red-700 hover:bg-red-50 ml-2 sm:ml-4 focus:ring-red-300`} aria-label="Apagar regra"><Trash2 className="inline h-5 w-5" /></button> </td> </>)} </tr>))}
                                           </tbody>
                                     </table>
@@ -1325,8 +1354,8 @@ export default function App() {
                   <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onLogout={handleLogout} />
                   {isSidebarOpen && <div className="fixed inset-0 bg-black/30 z-20 lg:hidden" onClick={() => setIsSidebarOpen(false)} aria-hidden="true"></div>}
                   <main className="flex-1 lg:ml-64 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
-                        {/* Passa o título real APENAS para telas grandes (lg), onde o h1 da página está oculto */}
-                        <Header onMenuClick={() => setIsSidebarOpen(true)} title={window.innerWidth < 1024 ? '' : pageTitles[currentPage] || "Clínica"} />
+                        {/* Modificado para sempre passar o título correto */}
+                        <Header onMenuClick={() => setIsSidebarOpen(true)} title={pageTitles[currentPage] || "Clínica"} />
                         <div className="flex-grow p-4 md:p-6 lg:p-8">
                               {loading ? (console.log("Render: Loading data..."), <LoadingSpinner />) : (console.log("Render: Rendering page", currentPage), renderPage())}
                         </div>
