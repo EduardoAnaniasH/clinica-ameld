@@ -1,9 +1,14 @@
-#root {
+/* Estilos comentados para evitar conflito com o layout principal
+  definido com Tailwind CSS no App.jsx.
+  O layout principal agora controla a largura máxima, margens e padding.
+*/
+/* #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} 
+*/
 
 .logo {
   height: 6em;
