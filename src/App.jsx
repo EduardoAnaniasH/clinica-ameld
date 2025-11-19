@@ -74,7 +74,7 @@ const EmptyState = ({ icon, title, message, actionButton }) => (<div className="
 const Toast = ({ id, message, type, removeToast }) => { const [isExiting, setIsExiting] = useState(false); useEffect(() => { const timer = setTimeout(() => { setIsExiting(true); setTimeout(() => removeToast(id), 400); }, 4600); return () => clearTimeout(timer); }, [id, removeToast]); const styles = { success: { bg: 'bg-green-500', icon: <Check size={20} /> }, error: { bg: 'bg-red-500', icon: <AlertCircle size={20} /> }, info: { bg: 'bg-blue-500', icon: <Info size={20} /> } }; const style = styles[type] || styles.info; const close = () => { setIsExiting(true); setTimeout(() => removeToast(id), 400); }; return (<div className={`flex items-start text-white p-4 rounded-lg shadow-lg transition-all duration-500 ease-out ${style.bg} ${isExiting ? 'animate-fade-out' : 'animate-fade-in-up'}`}><div className="mr-3 pt-1">{style.icon}</div><p className="flex-grow">{message}</p><button onClick={close} className="ml-4 -mr-2 -my-2 p-2 rounded hover:bg-black/20 focus:outline-none focus:ring-1" aria-label="Fechar">&times;</button></div>); };
 const ToastContainer = ({ toasts, removeToast }) => (<div className="fixed top-5 right-5 z-50 space-y-3 w-full max-w-xs sm:max-w-sm">{toasts.map(t => <Toast key={t.id} {...t} removeToast={removeToast} />)}</div>);
 
-// ** MODAL CORRIGIDO (Bug da lista para cima) **
+// ** MODAL CORRIGIDO (Bug da lista para cima + Bug Mobile Keyboard) **
 const Modal = ({ show, onClose, title, children }) => {
       useEffect(() => {
             if (show) document.body.style.overflow = 'hidden';
@@ -85,10 +85,10 @@ const Modal = ({ show, onClose, title, children }) => {
       if (!show) return null;
 
       return (
-            // Overlay: Adicionado 'h-screen'
-            <div className="fixed inset-0 bg-black/70 z-40 flex justify-center items-center p-4 animate-fade-in h-screen" onClick={onClose}>
-                  {/* Painel do Modal: Usa flex-col e max-h-[90vh]. REMOVIDO transform e scale-95 */}
-                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg z-50 flex flex-col max-h-[90vh]"
+            // Overlay: Adicionado 'h-screen' e 'items-start pt-16'
+            <div className="fixed inset-0 bg-black/70 z-40 flex justify-center items-start pt-16 p-4 animate-fade-in h-screen" onClick={onClose}>
+                  {/* Painel do Modal: Usa flex-col e max-h-[85vh]. REMOVIDO transform e scale-95 */}
+                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg z-50 flex flex-col max-h-[85vh]"
                         onClick={e => e.stopPropagation()}>
 
                         {/* Cabeçalho do Modal: Fixo (flex-shrink-0) */}
@@ -109,8 +109,8 @@ const Modal = ({ show, onClose, title, children }) => {
 
 const ConfirmationModal = ({ show, onClose, onConfirm, title, message, confirmLabel = "Apagar", confirmIcon = <Trash2 size={18} />, cancelLabel = "Cancelar", cancelIcon = <X size={18} />, isDestructive = true }) => {
       if (!show) return null; return (
-            // MODIFICADO: items-center
-            <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4 animate-fade-in" onClick={onClose}>
+            // MODIFICADO: items-start pt-16
+            <div className="fixed inset-0 bg-black/70 z-50 flex justify-center items-start pt-16 p-4 animate-fade-in" onClick={onClose}>
                   {/* REMOVIDO transform e scale-95 */}
                   <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
                         onClick={e => e.stopPropagation()}>
@@ -141,12 +141,11 @@ const FormModal = ({ show, onClose, title, children, onSubmit, isSubmitting }) =
       if (!show) return null;
 
       return (
-            // Overlay: Adicionado 'h-screen'
-            // MODIFICADO: items-center
-            <div className="fixed inset-0 bg-black/70 z-40 flex justify-center items-center p-4 animate-fade-in h-screen" onClick={onClose}>
-                  {/* Painel do Modal: Usa flex-col e max-h-[90vh] */}
+            // Overlay: Adicionado 'h-screen' e 'items-start pt-16'
+            <div className="fixed inset-0 bg-black/70 z-40 flex justify-center items-start pt-16 p-4 animate-fade-in h-screen" onClick={onClose}>
+                  {/* Painel do Modal: Usa flex-col e max-h-[85vh] */}
                   {/* REMOVIDO: transform scale-95 e style animation */}
-                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg z-50 flex flex-col max-h-[90vh]"
+                  <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg z-50 flex flex-col max-h-[85vh]"
                         onClick={e => e.stopPropagation()}>
 
                         {/* Cabeçalho Fixo */}
@@ -452,4 +451,3 @@ export default function App() {
             </div>
       );
 }
-
