@@ -219,30 +219,38 @@ const ImportacaoCSVModal = ({ show, onClose, onImportConfirm, isSubmitting }) =>
                   const lines = text.split(/\r\n|\n/).filter(l => l.trim() !== '');
                   if (lines.length < 2) throw new Error("Arquivo vazio ou inválido.");
 
-                  // Detecta cabeçalho (procura linha com "Data" e ("Profissional" ou "Cliente" ou "Situação"))
+                  // Detecta cabeçalho (procura linha com "Data" e "Paciente/Cliente")
                   let headerIndex = -1;
+
                   for (let i = 0; i < Math.min(20, lines.length); i++) {
-                        const lineLower = lines[i].toLowerCase();
-                        if (lineLower.includes('data') && (lineLower.includes('profissional') || lineLower.includes('cliente') || lineLower.includes('situacao'))) {
+                        // Remove BOM e converte para minúsculas para comparação
+                        const lineLower = lines[i].replace(/^\uFEFF/, '').toLowerCase();
+
+                        // Procura colunas obrigatórias "data" e "paciente" ou "cliente"
+                        const hasData = lineLower.includes('data') || lineLower.includes('dt');
+                        const hasPaciente = lineLower.includes('paciente') || lineLower.includes('cliente') || lineLower.includes('nome');
+
+                        if (hasData && hasPaciente) {
                               headerIndex = i;
                               break;
                         }
                   }
 
-                  if (headerIndex === -1) throw new Error("Cabeçalho não encontrado. Verifique se o arquivo é um CSV de atendimentos.");
+                  if (headerIndex === -1) throw new Error("Cabeçalho padrão não encontrado. Verifique se a planilha tem as colunas: 'Data' e 'Paciente'.");
 
-                  const headers = lines[headerIndex].split(/,|;/).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+                  const headersRaw = lines[headerIndex].replace(/^\uFEFF/, '').split(/,|;/);
+                  const headers = headersRaw.map(h => h.trim().toLowerCase().replace(/"/g, ''));
 
-                  // Mapeamento de índices (busca flexível)
-                  const idxData = headers.findIndex(h => h.includes('data'));
-                  const idxPaciente = headers.findIndex(h => h.includes('cliente') || h.includes('paciente'));
-                  const idxProfissional = headers.findIndex(h => h.includes('profissional') && !h.includes('area'));
-                  const idxServico = headers.findIndex(h => h.includes('procedimento') || h.includes('serviço'));
-                  const idxValor = headers.findIndex(h => h.includes('valor') || h.includes('preço') || h.includes('final'));
-                  const idxStatus = headers.findIndex(h => h.includes('situacao') || h.includes('status'));
+                  // Mapeamento de índices (busca flexível mas dentro do padrão)
+                  const idxData = headers.findIndex(h => h.includes('data') || h.includes('dt'));
+                  const idxPaciente = headers.findIndex(h => h.includes('cliente') || h.includes('paciente') || h.includes('nome'));
+                  const idxProfissional = headers.findIndex(h => h.includes('profissional') || h.includes('médico') || h.includes('medico'));
+                  const idxServico = headers.findIndex(h => h.includes('procedimento') || h.includes('serviço') || h.includes('servico') || h.includes('tipo'));
+                  const idxValor = headers.findIndex(h => h.includes('valor') || h.includes('preço') || h.includes('preco') || h.includes('total'));
+                  const idxStatus = headers.findIndex(h => h.includes('situacao') || h.includes('situação') || h.includes('status'));
 
-                  if (idxData === -1) throw new Error("Coluna de DATA não encontrada.");
-                  if (idxPaciente === -1) throw new Error("Coluna de PACIENTE/CLIENTE não encontrada.");
+                  if (idxData === -1) throw new Error("Coluna 'Data' não encontrada.");
+                  if (idxPaciente === -1) throw new Error("Coluna 'Paciente' não encontrada.");
 
                   const parsed = [];
                   for (let i = headerIndex + 1; i < lines.length; i++) {
@@ -265,12 +273,13 @@ const ImportacaoCSVModal = ({ show, onClose, onImportConfirm, isSubmitting }) =>
                               }
 
                               const valorNum = idxValor > -1 ? cleanNumber(clean(cols[idxValor])) : 0;
+                              const pacienteVal = idxPaciente > -1 ? clean(cols[idxPaciente]) : 'Sem Nome';
 
                               if (dataFinal && dataFinal.length >= 8) {
                                     parsed.push({
                                           id: Math.random().toString(36).substr(2, 9),
                                           data: dataFinal,
-                                          paciente: clean(cols[idxPaciente]),
+                                          paciente: pacienteVal,
                                           profissional: idxProfissional > -1 ? clean(cols[idxProfissional]) : 'Desconhecido',
                                           tipo: idxServico > -1 ? clean(cols[idxServico]) : 'Consulta',
                                           valor: valorNum.toFixed(2),
@@ -582,11 +591,25 @@ export default function App() {
 
       // --- Handlers ---
       const handleAddAtendimento = (i) => atendimentoOps.add(i, null); // Null pois controlamos toast no wrapper
-      const handleAddTransaction = (i, a) => financeiroOps.add(i, a ? 'Transação adicionada!' : null); const handleAddItem = (i) => estoqueOps.add(i, 'Item adicionado!'); const handleAddRepasse = (i) => repasseOps.add(i, 'Regra adicionada!'); const handleAddServico = (i) => servicoOps.add(i, 'Serviço adicionado!'); const handleAddPaciente = (i) => pacienteOps.add(i, 'Paciente adicionado!');
+      const handleAddTransaction = (i, a) => financeiroOps.add(i, a ? 'Transação adicionada!' : null);
+      const handleAddItem = (i) => estoqueOps.add(i, 'Item adicionado!');
+      const handleAddRepasse = (i) => repasseOps.add(i, 'Regra adicionada!');
+      const handleAddServico = (i) => servicoOps.add(i, 'Serviço adicionado!');
+      const handleAddPaciente = (i) => pacienteOps.add(i, 'Paciente adicionado!');
+
       const handleUpdateAtendimento = (i) => atendimentoOps.update(i, null);
       const handleUpdateTransaction = (item) => { if (Object.keys(item).length === 2 && item.id && item.status) { const c = (financeiro || []).find(f => f.id === item.id); if (c) { return financeiroOps.update({ ...c, status: item.status }, 'Status atualizado!'); } else { const e = "Item não encontrado"; console.error(e, item.id); showToast(e, 'error'); return Promise.reject(new Error(e)); } } else { return financeiroOps.update(item, 'Transação atualizada!'); } };
-      const handleUpdateItemEstoque = (i) => estoqueOps.update(i, 'Estoque atualizado!'); const handleUpdateRepasse = (i) => repasseOps.update(i, 'Regra atualizada!'); const handleUpdateServico = (i) => servicoOps.update(i, 'Serviço atualizado!'); const handleUpdatePaciente = (i) => pacienteOps.update(i, 'Paciente atualizado!');
-      const handleDeleteAtendimento = (id) => atendimentoOps.remove(id, 'Atendimento apagado!'); const handleDeleteTransaction = (id) => financeiroOps.remove(id, 'Transação apagada!'); const handleDeleteItemEstoque = (id) => estoqueOps.remove(id, 'Item apagado!'); const handleDeleteRepasse = (id) => repasseOps.remove(id, 'Regra apagada!'); const handleDeleteServico = (id) => servicoOps.remove(id, 'Serviço apagado!'); const handleDeletePaciente = (id) => pacienteOps.remove(id, 'Paciente apagado!');
+      const handleUpdateItemEstoque = (i) => estoqueOps.update(i, 'Estoque atualizado!');
+      const handleUpdateRepasse = (i) => repasseOps.update(i, 'Regra atualizada!');
+      const handleUpdateServico = (i) => servicoOps.update(i, 'Serviço atualizado!');
+      const handleUpdatePaciente = (i) => pacienteOps.update(i, 'Paciente atualizado!');
+
+      const handleDeleteAtendimento = (id) => atendimentoOps.remove(id, 'Atendimento apagado!');
+      const handleDeleteTransaction = (id) => financeiroOps.remove(id, 'Transação apagada!');
+      const handleDeleteItemEstoque = (id) => estoqueOps.remove(id, 'Item apagado!');
+      const handleDeleteRepasse = (id) => repasseOps.remove(id, 'Regra apagada!');
+      const handleDeleteServico = (id) => servicoOps.remove(id, 'Serviço apagado!');
+      const handleDeletePaciente = (id) => pacienteOps.remove(id, 'Paciente apagado!');
 
       // --- fetchData ---
       const fetchData = async () => {
